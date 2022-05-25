@@ -3,16 +3,30 @@
 namespace App\Services;
 
 use App\Models\Transport;
+use App\Repositories\Transport\TransportRepository;
 
 class Search
 {
+    /**
+     * @var TransportRepository $transport
+     */
+    protected $transport;
+
+    /**
+     * @param TransportRepository $transport
+     */
+    public function __construct(TransportRepository $transport)
+    {
+        $this->transport = $transport;
+    }
+
     /**
      * Filter product
      *
      * @param array $data
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public static function getProducts(array $data)
+    public function getProducts(array $data)
     {
         $color = isset($data['color']) && $data['color'] ? $data['color'] : null;
         $hasWheels = isset($data['hasWheels']) && $data['hasWheels'] ? $data['hasWheels'] : null;
@@ -21,11 +35,8 @@ class Search
         $wheels = isset($data['wheels']) && $data['wheels'] ? $data['wheels'] : null;
         $sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'asc';
 
-        return Transport::with(['colors' => function ($q) use ($color) {
-                $q->when($color, function ($q) use ($color) {
-                    $q->where('color', $color);
-                });
-            }])
+        return $this->transport
+            ->withColor($color)
             ->where(function ($query) use ($color, $hasWheels, $title, $type, $wheels) {
                 $query->when($hasWheels, function ($query) use ($hasWheels) {
                     return $query->where('hasWheels', $hasWheels);
