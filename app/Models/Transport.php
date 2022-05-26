@@ -19,16 +19,4 @@ class Transport extends Model
     {
         return $this->belongsToMany(Color::class);
     }
-
-    /**
-     * @param $query
-     * @param $color
-     * @return mixed
-     */
-    public function scopeWhenColor($query, $color)
-    {
-        return $query->when($color, function ($q) use ($color) {
-            $q->where('color', $color);
-        });
-    }
 }

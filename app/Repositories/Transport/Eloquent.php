@@ -42,12 +42,15 @@ class Eloquent implements TransportRepository
      */
     public function withColor(string $color)
     {
-        return $this->model::with(['colors' => function () use ($color) {
-            $this->model->whenColor($color);
+        return $this->model::with(['colors' => function ($query) use ($color) {
+            $query->when($color, function ($q) use ($color) {
+                $q->where('color', $color);
+            });
         }])
-        ->whereHas('colors', function () use ($color) {
-            $this->model->whenColor($color);
-        });
+            ->whereHas('colors', function ($query) use ($color) {
+                $query->when($color, function ($q) use ($color) {
+                    $q->where('color', $color);
+                });
+            });
     }
-
 }
