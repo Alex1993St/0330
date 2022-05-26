@@ -37,15 +37,17 @@ class Eloquent implements TransportRepository
     }
 
     /**
-     * @param string|null $color
+     * @param string $color
      * @return \Illuminate\Database\Eloquent\Builder|mixed
      */
-    public function withColor($color)
+    public function withColor(string $color)
     {
-        return $this->model::with(['colors' => function ($q) use ($color) {
-            $q->when($color, function ($q) use ($color) {
-                $q->where('color', $color);
-            });
-        }]);
+        return $this->model::with(['colors' => function () use ($color) {
+            $this->model->whenColor($color);
+        }])
+        ->whereHas('colors', function () use ($color) {
+            $this->model->whenColor($color);
+        });
     }
+
 }

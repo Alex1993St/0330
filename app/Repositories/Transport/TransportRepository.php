@@ -16,8 +16,8 @@ interface TransportRepository
     public function selectAll();
 
     /**
-     * @param string|null$color
+     * @param string $color
      * @return mixed
      */
-    public function withColor($color);
+    public function withColor(string $color);
 }

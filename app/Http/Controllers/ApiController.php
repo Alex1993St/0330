@@ -20,10 +20,11 @@ class ApiController extends Controller
 
     /**
      * @param ProductSearchRequest $request
-     * @return mixed
+     * @param Search $search
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function search(ProductSearchRequest $request)
+    public function search(ProductSearchRequest $request, Search $search)
     {
-        return app(Search::class)->getProducts($request->all());
+        return $search->getProducts($request->all());
     }
 }

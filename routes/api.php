@@ -16,10 +16,7 @@ use \App\Http\Middleware\RedirectIfNotKeyExist;
 |
 */
 
-Route::middleware([RedirectIfNotKeyExist::class])->group(function () {
-    Route::get('/search', [ApiController::class, 'search'])->name('api.get.search');
-});
-
+Route::get('/search', [ApiController::class, 'search'])->middleware([RedirectIfNotKeyExist::class])->name('api.get.search');
 Route::get('/getKey', [ApiController::class, 'getKey'])->name('api.get.key');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
